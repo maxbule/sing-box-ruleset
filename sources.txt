@@ -1,7 +1,13 @@
-# 在下方添加你要转换的 Clash 规则链接，每条链接占一行
-# 例如：
-# https://example.com/rule1.yaml
-# https://example.com/rule2.yaml
+# sources.txt - 规则源配置
+# 支持两种格式：
+# 1. 远程 URL: https://example.com/rule.yaml
+# 2. 本地路径: ./path/to/rule.yaml 或 ../relative/path/rule.yaml
+#
+# 说明：
+# 如果使用 Git 子模块或本地克隆的 ios_rule_script，可改用本地路径：
+# ./ios_rules/rule/Clash/Netflix/Netflix_Classical.yaml
+# 当 ios_rule_script 仓库更新时，运行 git submodule update 后再运行此脚本，
+# 即可自动生成最新的 JSON 规则文件。
 https://raw.githubusercontent.com/maxbule/ios_rule_script/master/rule/Clash/Netflix/Netflix_Classical.yaml
 https://raw.githubusercontent.com/maxbule/ios_rule_script/master/rule/Clash/Spotify/Spotify.yaml
 https://raw.githubusercontent.com/maxbule/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml

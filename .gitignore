@@ -44,3 +44,8 @@ output.yaml
 output/
 *.tmp
 .cache
+json_rules/
+merged-rules.json
+sing-box-rules*.srs
+sources-local.txt
+ios_rules/

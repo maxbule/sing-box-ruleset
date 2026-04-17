@@ -1,0 +1,113 @@
+name: Update Rules from ios_rule_script
+
+on:
+  schedule:
+    # 每天 UTC 0 点运行
+    - cron: '0 0 * * *'
+    # 每 12 小时检查一次
+    - cron: '0 */12 * * *'
+  workflow_dispatch:  # 支持手动触发
+  # 如果 ios_rule_script 是子模块，可以通过 push 事件触发
+  push:
+    paths:
+      - 'ios_rules'  # 当子模块更新时触发
+      - 'sources.txt'
+      - 'convert.py'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Update submodules to latest
+        run: |
+          git submodule update --remote --merge
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate rules
+        run: |
+          echo "Generating rules from sources..."
+          python convert.py
+          echo ""
+          echo "Generated files:"
+          ls -lh json_rules/ | tail -5
+          echo "Total rules generated: $(ls json_rules/ | wc -l)"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add -A
+          git commit -m "chore: Auto-update rules from ios_rule_script
+
+- Updated rules from ios_rule_script submodule
+- Generated JSON rule files
+- Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
+
+      - name: No changes
+        if: steps.changes.outputs.has_changes == 'false'
+        run: echo "No changes detected, skipping commit"
+
+  # 可选：创建 PR 而不是直接 push
+  create-pr:
+    if: false  # 改为 true 启用此 job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Update submodules
+        run: git submodule update --remote --merge
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies and generate rules
+        run: |
+          pip install -r requirements.txt
+          python convert.py
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: 'chore: Auto-update rules from ios_rule_script'
+          title: 'chore: Auto-update rules'
+          body: |
+            This PR updates the rules based on the latest ios_rule_script changes.
+            
+            **Changes:**
+            - Updated rules from ios_rule_script repository
+            - Regenerated all JSON rule files
+            - Timestamp: ${{ github.event.head_commit.timestamp }}
+          branch: auto/update-rules
+          delete-branch: true
