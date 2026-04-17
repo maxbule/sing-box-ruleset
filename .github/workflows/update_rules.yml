@@ -28,7 +28,7 @@ jobs:
 
       - name: Install sing-box
         run: |
-          bash <(curl -fsSL https://sing-box.app/install.sh | sh)
+          bash <(curl -fsSL https://sing-box.app/install.sh | bash)
           # 如果上述脚本失效，可手动下载 binary 并放入 PATH
 
       - name: Compile SRS files
