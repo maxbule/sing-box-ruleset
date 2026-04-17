@@ -1,0 +1,50 @@
+name: Update Rules
+
+name: Update Sing-box Rules
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天凌晨自动运行一次
+  workflow_dispatch:    # 支持手动点击按钮运行
+  push:
+    paths:
+      - 'sources.txt'   # 当你修改链接列表时立即触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install pyyaml requests
+
+      - name: Run conversion script
+        run: python convert.py
+
+      - name: Install sing-box
+        run: |
+          bash <(curl -fsSL https://sing-box.app/install.sh | sh)
+          # 如果上述脚本失效，可手动下载 binary 并放入 PATH
+
+      - name: Compile SRS files
+        run: |
+          mkdir -p srs_rules
+          for file in json_rules/*.json; do
+            filename=$(basename "$file" .json)
+            sing-box rule-set compile "$file" -o "srs_rules/${filename}.srs"
+          done
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add json_rules/*.json srs_rules/*.srs
+          git commit -m "Auto-update rules: $(date)" || echo "No changes to commit"
+          git push
