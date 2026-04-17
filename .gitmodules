@@ -1,0 +1,3 @@
+[submodule "ios_rules"]
+	path = ios_rules
+	url = https://github.com/maxbule/ios_rule_script.git
