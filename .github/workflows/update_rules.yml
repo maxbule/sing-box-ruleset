@@ -2,7 +2,7 @@ name: Update Sing-box Rules
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天凌晨自动运行一次
+    - cron: '0 0 * * *'
   workflow_dispatch:    # 支持手动点击按钮运行
   push:
     paths:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Install sing-box
         run: |
-          bash <(curl -fsSL https://sing-box.app/install.sh | bash)
+          curl -fsSL https://sing-box.app/install.sh | bash
           # 如果上述脚本失效，可手动下载 binary 并放入 PATH
 
       - name: Compile SRS files
