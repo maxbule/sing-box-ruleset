@@ -2,51 +2,47 @@ name: Update Sing-box Rules
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+    - cron: '0 0 * * *' # 每天凌晨自动运行一次
+  workflow_dispatch:    # 支持手动点击按钮运行
   push:
     paths:
-      - 'sources.txt'
-      - 'convert.py'
+      - 'sources.txt'   # 当你修改链接列表时立即触发
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml requests
+        run: pip install pyyaml requests
 
       - name: Run conversion script
         run: python convert.py
 
-      - name: Check for changes
-        id: changes
+      - name: Install sing-box
         run: |
-          if ! git diff --quiet json_rules/ 2>/dev/null; then
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          fi
+          bash <(curl -fsSL https://sing-box.app/install.sh | bash)
+          # 如果上述脚本失效，可手动下载 binary 并放入 PATH
+
+      - name: Compile SRS files
+        run: |
+          mkdir -p srs_rules
+          for file in json_rules/*.json; do
+            filename=$(basename "$file" .json)
+            sing-box rule-set compile "$file" -o "srs_rules/${filename}.srs"
+          done
 
       - name: Commit and Push changes
-        if: steps.changes.outputs.has_changes == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add json_rules/ || true
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: Auto-update rules"
-            git push
-          fi
+          git add json_rules/*.json srs_rules/*.srs
+          git commit -m "Auto-update rules: $(date)" || echo "No changes to commit"
+          git push
