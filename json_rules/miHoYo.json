@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "hoyoverse.com",
+        "bh3.com",
+        "yuanshen.com",
+        "mihayo.com",
+        "mihoyo.com",
+        "hoyolab.com",
+        "miyoushe.com"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "pornhubpremium.com",
+        "phprcdn.com",
+        "pornhub.com",
+        "phncdn.com"
+      ]
+    }
+  ]
+}

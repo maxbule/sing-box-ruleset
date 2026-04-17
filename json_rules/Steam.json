@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+        "st.dl.eccdnx.com",
+        "f3b7q2p3.ssl.hwcdn.net",
+        "humblebundle.com",
+        "steam.cdn.slingshot.co.nz",
+        "steampipe-partner.akamaized.net",
+        "steampipe-kr.akamaized.net",
+        "steambroadcast.akamaized.net",
+        "steamuserimages-a.akamaihd.net",
+        "playartifact.com",
+        "fanatical.com",
+        "steamcdn-a.akamaihd.net",
+        "dota2.wmsj.cn",
+        "steam-api.com",
+        "st.dl.pinyuncloud.com",
+        "underlords.com",
+        "steamcommunity-a.akamaihd.net",
+        "csgo.wmsj.cn",
+        "steam.tv",
+        "steamstore-a.akamaihd.net",
+        "steam.naeu.qtlglb.com",
+        "st.dl.bscstorage.net",
+        "steamcontent.tnkjmec.com",
+        "dl.steam.ksyna.com",
+        "steam-chat.com",
+        "s.team",
+        "steam.cdn.webra.ru",
+        "steampowered.com",
+        "cdn-ali.content.steamchina.com",
+        "edge.steam-dns.top.comcast.net",
+        "steamgames.com",
+        "steamdeck.com",
+        "steamstatic.com",
+        "steam.eca.qtlglb.com",
+        "steam.ru.qtlglb.com",
+        "dl.steam.clngaa.com",
+        "steampowered.com.8686c.com",
+        "steamvideo-a.akamaihd.net",
+        "steamcommunity.com",
+        "steampipe.akamaized.net",
+        "steam.cdn.orcon.net.nz",
+        "steammobile.akamaized.net",
+        "steamstatic.com.8686c.com",
+        "cdn-ws.content.steamchina.com",
+        "steamstat.us",
+        "steam.cdn.on.net",
+        "steam.apac.qtlglb.com",
+        "steamusercontent-a.akamaihd.net",
+        "steamunlocked.net",
+        "cdn-qc.content.steamchina.com",
+        "valvesoftware.com",
+        "wmsjsteam.com"
+      ]
+    },
+    {
+      "domain_keyword": [
+        "steamstore",
+        "steamuserimages",
+        "steambroadcast"
+      ]
+    }
+  ]
+}
